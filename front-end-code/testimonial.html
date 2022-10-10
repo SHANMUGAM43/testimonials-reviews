@@ -1,0 +1,262 @@
+<style>
+    .main {
+        background-color: #779679;
+    }
+
+    .main-output {
+        background-color: white;
+        margin-bottom: 50px;
+      margin-top: 30px;
+        padding: 25px;
+      border-top: 1px solid #e5e5e5;
+      font-family: 'Public Sans';
+      display: inline-block;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        padding: 0;
+    align-items: center;
+    margin: 10px 0 20px;
+    }
+
+    .header a button {
+        padding: 10px;
+        margin-right: 0;
+        font-size: 14px;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: #fff;
+      font-family: 'Public Sans';
+      background: #779679;
+      outline: 0;
+      box-shadow: none;
+      border: none;
+    }
+
+    .header-info {
+        font-size: 14px;
+        font-weight: 400 !important;
+        margin: 15px 0;
+        line-height: 24px !important;
+        color: #779679;
+        padding: 0;
+      font-family: 'Public Sans';
+      letter-spacing: 0;
+          display: inline-block;
+    }
+
+    h2.title {
+        display: inline-block;
+        color: #444 !important;
+        font-size: 30px;
+      margin-bottom: 0;
+        font-weight: 700 !important;
+      font-family: 'Public Sans';
+      text-transform: uppercase;
+    letter-spacing: 0;
+    }
+
+    .output {
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        margin: 10px 0px;
+        padding: 10px;
+
+    }
+
+    .message {
+        font-size: 16px !important;
+        color: #779679 !important;
+        margin-bottom: 0 !important;
+        font-weight: 600;
+        font-family: 'Public Sans';
+      letter-spacing: 0;
+      text-align: justify;
+    }
+
+    .name {
+        font-weight: 700;
+    font-size: 12px;
+    color: #6e6e6e;
+    margin: 10px 0;
+      text-transform: capitalize;
+    }
+
+    .form-btn {
+        display: inline-block;
+        background-color: #045604;
+    }
+
+    .rating_title {
+        color: #777;
+    margin-bottom: 5px;
+    font-weight: 100;
+    font-size: 12px;
+    }
+
+    .rating_star {
+        max-width: 7%;
+    }
+    #loader{
+      text-align: center;
+    }
+    .loader_btn {
+        background: #779679;
+      color: #fff;
+      outline: 0;
+      box-shadow: none;
+      border: none;
+      font-weight: 500;
+      padding: 12px 20px;
+      display: inline-block;
+      text-transform: uppercase;
+      margin-top: 20px;
+    }
+    .empty-value{
+      
+    }
+  .empty-message{
+    text-align: center;
+    font-size: 20px;
+    color: #045604;
+    font-weight: 700;
+  }
+  .ajax-loader {
+    display: none;
+    z-index: +100 !important;
+    width: 100px;
+    margin: auto;
+}
+  .ajax-loader img {
+    position: relative;
+}
+  @media (max-width: 767px){
+    .header {
+        display: block;
+      text-align: center;
+    }
+    h2.title {
+      display: block;
+    }
+    .header a button{
+      margin-top: 20px;
+    }
+  }
+</style>
+
+<div class="main">
+    <div class="page-width">
+        <div class="main-output">
+            <div class="header">
+                <h2 class="title">Testimonials</h3>
+                    <a href="/pages/testimonial-form"><button class="form-btn">Submit Your Testimonial</button></a>
+            </div>
+            <p class="header-info"><strong>You are the most important part of our business.</strong> We recognize this and always strive to provide professional, knowledgeable, friendly service before and after your purchase. Whether you are looking for the perfect gift or selecting a piece that will become a family heirloom, we want your experience to be enjoyable and informative. How may we serve you? Here are some of the reviews that our customers have left for us and we would love to hear from you also!</p>
+            <div id="responsecontainer" class="sub-main"></div>
+            <div id="loader">
+                <div class="ajax-loader">
+                    <img src="https://cdn.shopify.com/s/files/1/0247/5725/files/Iphone-spinner-2.gif" class="img-responsive">
+                </div>
+                <button id="loader_btn" class="loader_btn" onclick="myFunction()">Show more testimonials</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var divData = '';
+        $.ajax({ //create an ajax request to display.php
+            type: "GET",
+            url: "https://testimonials.enterpriseapplicationdevelopers.com/api/testimonials",
+            dataType: "json", //expect html to be returned                
+            success: function(response) {
+                console.log(response.results);
+
+                if (response.results.length == 0) {
+                    divData += "<div class='empty-value'><p class='empty-message'>There is No Testimonial</p></div>";
+
+                    $("#responsecontainer").html(divData);
+                  document.getElementById("loader_btn").style.display = "none";
+                } else {
+
+                    response.results.data.forEach(datas => {
+                            if (datas.rating == 1) {
+                                divData += "<div class='output'><p class='message'>&ldquo;" + datas.message + "&rdquo;</p><h5 class='name'>" + datas.name + "</h5><h6 class='rating_title'>Rating</h6><img src='https://testimonials.enterpriseapplicationdevelopers.com/photos/092120220522001-star.png' class='rating_star'></div> ";
+
+                            } else if (datas.rating == 2) {
+                                divData += "<div class='output'><p class='message'>&ldquo;" + datas.message + "&rdquo;</p><h5 class='name'>" + datas.name + "</h5><h6 class='rating_title'>Rating</h6><img src='https://testimonials.enterpriseapplicationdevelopers.com/photos/092120220522132-star.png' class='rating_star'></div> ";
+
+                            } else if (datas.rating == 3) {
+                                divData += "<div class='output'><p class='message'>&ldquo;" + datas.message + "&rdquo;</p><h5 class='name'>" + datas.name + "</h5><h6 class='rating_title'>Rating</h6><img src='https://testimonials.enterpriseapplicationdevelopers.com/photos/092120220522293-star.png' class='rating_star'></div> ";
+
+                            } else if (datas.rating == 4) {
+                                divData += "<div class='output'><p class='message'>&ldquo;" + datas.message + "&rdquo;</p><h5 class='name'>" + datas.name + "</h5><h6 class='rating_title'>Rating</h6><img src='https://testimonials.enterpriseapplicationdevelopers.com/photos/092120220522444-star.png' class='rating_star'></div> ";
+
+                            } else if (datas.rating == 5) {
+                                divData += "<div class='output'><p class='message'>&ldquo;" + datas.message + "&rdquo;</p><h5 class='name'>" + datas.name + "</h5><h6 class='rating_title'>Rating</h6><img src='https://testimonials.enterpriseapplicationdevelopers.com/photos/092120220523055-star.png' class='rating_star'></div> ";
+
+                            }
+
+                            $("#responsecontainer").html(divData);
+                        }
+
+                    )
+                }
+            }
+        });
+    });
+</script>
+<script>
+    var click = 1;
+
+    function myFunction() {
+        click += 1;
+        console.log(click);
+        var divData = '';
+        $.ajax({
+            type: "GET",
+            url: "https://testimonials.enterpriseapplicationdevelopers.com/api/testimonials?page=" + click,
+            beforeSend: function() {
+                            $('.ajax-loader').css("display", "block");
+                        },
+            dataType: "json", //expect html to be returned                
+            success: function(response) {
+                response.results.data.forEach(datas => {
+                    if (datas.rating == 1) {
+                        divData += "<div class='output'><p class='message'>&ldquo;" + datas.message + "&rdquo;</p><h5 class='name'>" + datas.name + "</h5><h6 class='rating_title'>Rating</h6><img src='https://testimonials.enterpriseapplicationdevelopers.com/photos/092120220522001-star.png' class='rating_star'></div> ";
+
+                    } else if (datas.rating == 2) {
+                        divData += "<div class='output'><p class='message'>&ldquo;" + datas.message + "&rdquo;</p><h5 class='name'>" + datas.name + "</h5><h6 class='rating_title'>Rating</h6><img src='https://testimonials.enterpriseapplicationdevelopers.com/photos/092120220522132-star.png' class='rating_star'></div> ";
+
+                    } else if (datas.rating == 3) {
+                        divData += "<div class='output'><p class='message'>&ldquo;" + datas.message + "&rdquo;</p><h5 class='name'>" + datas.name + "</h5><h6 class='rating_title'>Rating</h6><img src='https://testimonials.enterpriseapplicationdevelopers.com/photos/092120220522293-star.png' class='rating_star'></div> ";
+
+                    } else if (datas.rating == 4) {
+                        divData += "<div class='output'><p class='message'>&ldquo;" + datas.message + "&rdquo;</p><h5 class='name'>" + datas.name + "</h5><h6 class='rating_title'>Rating</h6><img src='https://testimonials.enterpriseapplicationdevelopers.com/photos/092120220522444-star.png' class='rating_star'></div> ";
+
+                    } else if (datas.rating == 5) {
+                        divData += "<div class='output'><p class='message'>&ldquo;" + datas.message + "&rdquo;</p><h5 class='name'>" + datas.name + "</h5><h6 class='rating_title'>Rating</h6><img src='https://testimonials.enterpriseapplicationdevelopers.com/photos/092120220523055-star.png' class='rating_star'></div> ";
+
+                    }
+                })
+                $("#responsecontainer").append(divData);
+                if (response.results.data.length != 10) {
+                    document.getElementById("loader_btn").style.display = "none";
+
+                }
+
+            },
+            complete: function() {
+                $('.ajax-loader').css("display", "none");
+            }
+
+        });
+
+    }
+</script>
